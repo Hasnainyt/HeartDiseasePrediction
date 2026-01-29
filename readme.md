@@ -1,74 +1,88 @@
-# Diabetes Prediction
+# Heart Disease Prediction System 🫀
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-App-green)](https://streamlit.io/)
-
-A machine learning project that predicts whether a person is likely to have diabetes based on health data. The project includes data analysis, model training, and a simple **Streamlit web app** for predictions.
+A Python-based machine learning project that predicts heart disease using **Support Vector Machine (SVM)** and **Logistic Regression** models. The project includes a **Streamlit web application** that allows users to input patient health metrics and get instant predictions.
 
 ---
 
-## 📊 Project Overview
+## Features
 
-- **Objective:** Predict diabetes using health-related features.
-- **Dataset:** Pima Indians Diabetes Database (`diabetes.csv`)  
-- **Techniques Used:**  
-  - Data preprocessing and exploration  
-  - Machine Learning models (e.g., Logistic Regression, Svm, etc.)  
-  - Model evaluation (accuracy)  
-  - Streamlit for web app interface
-
----
-
-## 🗂 Repository Structure
-
-DiabetesPrediction/
-│
-├── diabetes.ipynb # Jupyter notebook with data analysis and model training
-├── diabetes.csv # Dataset
-├── diabetes_model.pkl # Trained ML model
-├── scaler.pkl # Preprocessing scaler
-├── app.py # Streamlit web app
-├── requirements.txt # Required Python packages
-└── README.md # Project documentation
-
+- Predicts heart disease risk based on 13 clinical features:
+  - Age, Sex, Chest Pain Type, Resting Blood Pressure, Cholesterol
+  - Fasting Blood Sugar, Resting ECG, Max Heart Rate, Exercise Induced Angina
+  - ST Depression (Oldpeak), Slope of ST Segment, Number of Major Vessels, Thalassemia
+- Uses **SVM** and **Logistic Regression** for prediction.
+- Standardizes input features using the same scaler as the training dataset.
+- Displays predictions in a **clean tabular format** showing model results and heart condition.
+- Web interface built with **Streamlit** for easy interaction.
 
 ---
 
-## 🚀 How to Run
+## Dataset
 
-### 1️⃣ Clone the repository
+The dataset `heart.csv` contains heart disease patient records with the following columns:
+
+age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal, target
+
+
+- `target` is the label: `0 = Healthy`, `1 = Non Healthy`.
+
+---
+
+## Requirements
+
+- Python >= 3.8
+- Libraries:
+  - pandas
+  - numpy
+  - scikit-learn
+  - streamlit
+  - joblib
+
+Install dependencies using:
+
 ```bash
-git clone https://github.com/Hasnainyt/DiabetesPrediction.git
-cd DiabetesPrediction
-2️⃣ Install dependencies
 pip install -r requirements.txt
-3️⃣ Run Jupyter Notebook
-jupyter notebook diabetes.ipynb
-4️⃣ Run the Streamlit App
+How to Run
+Clone the repository:
+
+git clone https://github.com/Hasnainyt/HeartDiseasePrediction.git
+cd HeartDiseasePrediction
+Run the Streamlit web app:
+
 streamlit run app.py
-Open the URL displayed in the terminal to access the app.
+Open the URL shown in the terminal (usually http://localhost:8501) to access the app.
 
-📈 Model Performance
-Accuracy: ~[80%]
-Trained using the Pima Indians Diabetes dataset
+Input the patient details and click Predict to see results from SVM and Logistic Regression models.
+
+File Structure
+heart-disease-prediction/
+│
+├─ app.py                 # Streamlit web app
+├─ heart_model.pkl        # Logistic Regression model
+├─ svm_model.pkl          # SVM model
+├─ scaler.pkl             # StandardScaler for input
+├─ heart.csv              # Dataset
+├─ README.md              # Project documentation
+└─ requirements.txt       # Python dependencies
 
 
-⚡ Features
-Simple user interface to input health parameters
+Accuracy
+Model	Accuracy (Test Set)
+SVM	81.95%
+Logistic Regression	80.49%
+Contributing
+Contributions are welcome! Feel free to:
 
-Predicts diabetes probability
+Improve model accuracy
 
-Easy to extend with new models or features
+Add more visualization
 
-📝 License
-This project is licensed under the MIT License. See the LICENSE file for details.
+Enhance the Streamlit app interface
 
-💡 Future Improvements
-Hyperparameter tuning for better accuracy
+License
+This project is licensed under the MIT License.
 
-Add more ML models for comparison
+Author
+Your Hasnain
 
-Deploy as a cloud web app (e.g., Streamlit Cloud)
-
-📫 Contact
-Created by Hasnain YT – GitHub
+GitHub: Hasnainyt

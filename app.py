@@ -1,90 +1,62 @@
+import streamlit as st
 import numpy as np
 import pandas as pd
-import streamlit as st
 import joblib
 
-# Load model and scaler
-model = joblib.load("diabetes_model.pkl")
+# Load saved model and scaler
+
 scaler = joblib.load("scaler.pkl")
+svm_model = joblib.load("heart_classifier.pkl")           # SVM model
+logreg_model = joblib.load("heart_model.pkl")      # Logistic Regression model
 
-st.title("🩺 Diabetes Prediction App")
+st.title("Heart Disease Prediction System 🫀")
+st.write("Enter the patient details below to predict heart condition using SVM and Logistic Regression models.")
 
-st.write("Enter patient details to predict diabetes")
-
-# Input fields
-pregnancies = st.number_input(
-    "Pregnancies",
-    min_value=0,
-    max_value=17,
-    value=1
-)
-
-glucose = st.number_input(
-    "Glucose (mg/dL)",
-    min_value=50,     # avoid 0 (missing)
-    max_value=200,
-    value=120
-)
-
-blood_pressure = st.number_input(
-    "Blood Pressure (mm Hg)",
-    min_value=40,
-    max_value=130,
-    value=70
-)
-
-skin_thickness = st.number_input(
-    "Skin Thickness (mm)",
-    min_value=5,
-    max_value=99,
-    value=20
-)
-
-insulin = st.number_input(
-    "Insulin (µU/mL)",
-    min_value=10,
-    max_value=846,
-    value=80
-)
-
-bmi = st.number_input(
-    "BMI",
-    min_value=10.0,
-    max_value=67.1,
-    value=25.0
-)
-
-dpf = st.number_input(
-    "Diabetes Pedigree Function",
-    min_value=0.078,
-    max_value=2.42,
-    value=0.5
-)
-
-age = st.number_input(
-    "Age",
-    min_value=21,
-    max_value=81,
-    value=30
-)
+# Input fields for features
+age = st.number_input("Age", min_value=34, max_value=71, value=50)
+sex = st.selectbox("Sex (0 = Female, 1 = Male)", [0, 1])
+cp = st.number_input("Chest Pain Type (0-3)", min_value=0, max_value=3, value=0)
+trestbps = st.number_input("Resting Blood Pressure", min_value=100, max_value=180, value=120)
+chol = st.number_input("Cholesterol", min_value=131, max_value=360, value=200)
+fbs = st.number_input("Fasting Blood Sugar", min_value=0, max_value=2, value=0)
+restecg = st.number_input("Resting ECG (0-2)", min_value=0, max_value=2, value=0)
+thalach = st.number_input("Max Heart Rate Achieved", min_value=105, max_value=192, value=150)
+exang = st.selectbox("Exercise Induced Angina (0 = No, 1 = Yes)", [0, 1])
+oldpeak = st.number_input("ST Depression Induced by Exercise", min_value=0.0, max_value=5.6, value=1.0)
+slope = st.number_input("Slope of ST Segment (0-2)", min_value=0, max_value=2, value=1)
+ca = st.number_input("Number of Major Vessels (0-4)", min_value=0, max_value=4, value=0)
+thal = st.number_input("Thalassemia (0-3)", min_value=0, max_value=3, value=2)
 
 
 # Predict button
 if st.button("Predict"):
-    input_data = pd.DataFrame(
-        [[pregnancies, glucose, blood_pressure, skin_thickness,
-          insulin, bmi, dpf, age]],
-        columns=[
-            'Pregnancies', 'Glucose', 'BloodPressure',
-            'SkinThickness', 'Insulin', 'BMI',
-            'DiabetesPedigreeFunction', 'Age'
-        ]
-    )
-
-    scaled_data = scaler.transform(input_data)
-    prediction = model.predict(scaled_data)
-
-    if prediction[0] == 1:
-        st.error("⚠️ Diabetic")
+    input_data = np.array([age, sex, cp, trestbps, chol, fbs, restecg,
+                           thalach, exang, oldpeak, slope, ca, thal]).reshape(1, -1)
+    input_scaled = scaler.transform(input_data)
+      # Predict with both models
+    svm_pred = int(svm_model.predict(input_scaled)[0])
+    logreg_pred = int(logreg_model.predict(input_scaled)[0])
+    
+    # Map predictions to readable labels
+    svm_condition = "Healthy" if svm_pred == 0 else "Non Healthy"
+    logreg_condition = "Healthy" if logreg_pred == 0 else "Non Healthy"
+    
+    # Create results DataFrame
+    results = pd.DataFrame({
+        "Model": ["SVM", "Logistic Regression"],
+        "Prediction": [svm_pred, logreg_pred],
+        "Heart Condition": [svm_condition, logreg_condition]
+    })
+    
+    # Display results
+    st.subheader("Prediction Results:")
+    st.table(results)
+    
+    if logreg_pred == 0:
+        st.success("Healthy Heart")
     else:
-        st.success("✅ Not Diabetic")
+        st.error("Non Healthy Heart")
+        
+
+        
+        
